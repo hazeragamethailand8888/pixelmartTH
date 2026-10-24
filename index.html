@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PIXELMART ตลาดของเกมไทย</title>
+<style>
+:root{--bg:#070b16;--card:#0f1730;--line:#1f2d55;--a:#22d3ee;--b:#a78bfa;--tx:#e6ecff;--mut:#8b97bd;--ok:#4ade80}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,"Noto Sans Thai",sans-serif;background:var(--bg);color:var(--tx);background-image:linear-gradient(rgba(34,211,238,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,.07) 1px,transparent 1px);background-size:32px 32px;background-attachment:fixed}
+nav{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#070b16ee;border-bottom:1px solid var(--line);position:sticky;top:0;backdrop-filter:blur(8px);z-index:5}
+nav a{margin-left:12px;color:var(--mut);cursor:pointer;font-size:14px}
+.logo{font-size:20px;letter-spacing:2px;cursor:pointer}.logo span{color:var(--a)}
+main{max-width:900px;margin:auto;padding:16px}
+input,select,textarea,button{font:inherit;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--tx);width:100%;margin:4px 0}
+button{width:auto;background:linear-gradient(90deg,var(--a),var(--b));color:#041022;border:0;font-weight:700;cursor:pointer;padding:10px 16px}
+button.g{background:none;color:var(--tx);border:1px solid var(--line)}
+input[type=checkbox]{width:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer}
+.card img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#16203f;display:block}
+.p{padding:10px}.p h3{margin:4px 0;font-size:15px}
+.pr{color:var(--a)}.m{color:var(--mut);font-size:13px}
+.chips{display:flex;gap:8px;overflow-x:auto;margin:8px 0}
+.chip{padding:6px 12px;border:1px solid var(--line);border-radius:99px;white-space:nowrap;cursor:pointer;font-size:13px}.chip.on{background:var(--a);color:#041022}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin:6px 0}
+#md{display:none;position:fixed;inset:0;background:#000a;align-items:center;justify-content:center;padding:12px;z-index:9}
+.box{background:var(--card);border:1px solid var(--a);border-radius:14px;padding:16px;max-width:460px;width:100%;max-height:90vh;overflow:auto;position:relative}
+.x{position:absolute;right:14px;top:8px;cursor:pointer}
+.big{width:100%;border-radius:10px}.d{white-space:pre-wrap}
+.bd{font-size:12px;color:var(--ok);font-style:normal}
+#ts{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--a);padding:10px 16px;border-radius:99px;z-index:10}
+</style></head><body>
+<nav id="nav"></nav><main id="main"></main><div id="md"></div><div id="ts"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const SUPA_URL='https://ckwmkbuhylkglbbzcsfy.supabase.co',SUPA_KEY='sb_publishable_cky0ecswyluBHEkeYODPZQ_PvemV6jy';
+const db=supabase.createClient(SUPA_URL,SUPA_KEY);
+const CATS=['เกม','โมเดล 3D','2D','UI','ไอคอน','สคริปต์','เสียง','เพลง'];
+const ST={unpaid:'ยังไม่จ่าย',pending:'รอตรวจสอบ',live:'กำลังขาย',rejected:'ไม่ผ่าน',expired:'หมดอายุ',approved:'เงินเข้าแล้ว',rejected_:'ไม่ผ่าน'};
+const LC='id,seller,title,category,price,description,image_url,status,fee_paid,fee_percent,reject_reason,expires_at,created_at';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let me=null,prof=null,view='home',cat='',q='',S={};
+const isStaff=()=>prof&&['admin','ceo'].includes(prof.role),isCeo=()=>prof&&prof.role==='ceo';
+const badge=r=>r=='verified'?'<i class=bd>✔ ยืนยันตัวตน</i>':(r=='ceo'||r=='admin')?'<i class=bd>ทีมงาน</i>':'';
+function toast(m){const t=$('#ts');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',3000)}
+function modal(h){$('#md').innerHTML='<div class=box><span class=x onclick=closeM()>✕</span>'+h+'</div>';$('#md').style.display='flex'}
+function closeM(){$('#md').style.display='none'}
+async function loadS(){const{data}=await db.from('settings').select('*');(data||[]).forEach(r=>S[r.key]=r.value)}
+db.auth.onAuthStateChange(async(_,s)=>{me=s?.user||null;prof=null;await loadS();if(me)prof=(await db.from('profiles').select('*').eq('id',me.id).single()).data;render()});
+function go(v){view=v;render()}
+async function render(){
+ $('#nav').innerHTML=`<b class=logo onclick="go('home')">PIXEL<span>MART</span></b><div><a onclick="go('home')">ตลาด</a><a onclick="go('sell')">ลงขาย</a>`+(me?`<a onclick="go('mine')">บัญชี ฿${prof?.balance??0}</a>`+(isStaff()?`<a onclick="go('admin')">แอดมิน</a>`:'')+`<a onclick="db.auth.signOut()">ออก</a>`:`<a onclick="authM()">เข้าสู่ระบบ</a>`)+`</div>`;
+ await({home,sell,mine,admin}[view])();
+}
+const card=l=>`<div class=card onclick="detail(${l.id})"><img src="${esc(l.image_url)}" loading=lazy alt=""><div class=p><span class=m>${esc(l.category)}</span><h3>${esc(l.title)}</h3><b class=pr>฿${l.price}</b></div></div>`;
+async function home(){
+ let r=db.from('listings').select(LC).eq('status','live').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false});
+ if(cat)r=r.eq('category',cat);if(q)r=r.ilike('title','%'+q.replace(/[%,]/g,'')+'%');
+ const d=(await r).data||[];
+ $('#main').innerHTML=`<input placeholder="ค้นหาสินค้า" value="${esc(q)}" onchange="q=this.value;home()"><div class=chips>`+['',...CATS].map(c=>`<b class="chip ${c==cat?'on':''}" onclick="cat='${c}';home()">${c||'ทั้งหมด'}</b>`).join('')+`</div><div class=grid>`+(d.length?d.map(card).join(''):'<p class=m>ยังไม่มีสินค้าในหมวดนี้ กดลงขายเป็นคนแรก</p>')+`</div>`;
+}
+async function detail(id){
+ const{data:l}=await db.from('listings').select(LC).eq('id',id).single();if(!l)return;
+ const s=(await db.from('seller_info').select('*').eq('id',l.seller).single()).data;
+ modal(`<img class=big src="${esc(l.image_url)}" alt=""><h2>${esc(l.title)}</h2><p><b class=pr>฿${l.price}</b> <span class=m>${esc(l.category)}</span></p><p>ผู้ขาย ${esc(s?.name||'-')} ${badge(s?.role)}</p><p class=d>${esc(l.description)}</p><p id=ct></p><button onclick="contact(${l.id})">ติดต่อผู้ขาย</button> <button class=g onclick="report(${l.id})">รายงาน</button><p class=m>เว็บเป็นเพียงที่ฝากขาย ไม่รับผิดชอบการซื้อขายระหว่างผู้ใช้</p>`);
+}
+async function contact(id){if(!me)return authM();const{data,error}=await db.rpc('get_contact',{lid:id});$('#ct').innerHTML=error?esc(error.message):'ช่องทางติดต่อ: '+(/^https?:\/\//.test(data)?`<a href="${esc(data)}" target=_blank rel=noopener style="color:var(--a)">${esc(data)}</a>`:'<b>'+esc(data)+'</b>')}
+async function report(id){if(!me)return authM();const r=prompt('เหตุผลที่รายงาน');if(!r)return;const{error}=await db.from('reports').insert({listing_id:id,reporter:me.id,reason:r});toast(error?error.message:'ส่งรายงานแล้ว')}
+function authM(){modal(`<h2>สมาชิก</h2><input id=nm placeholder="ชื่อที่แสดง (ตอนสมัคร)"><input id=em type=email placeholder="อีเมล"><input id=pw type=password placeholder="รหัสผ่าน อย่างน้อย 6 ตัว"><button onclick="auth(1)">เข้าสู่ระบบ</button> <button class=g onclick="auth(0)">สมัครสมาชิก</button>`)}
+async function auth(login){const e=$('#em').value,p=$('#pw').value;const r=login?await db.auth.signInWithPassword({email:e,password:p}):await db.auth.signUp({email:e,password:p,options:{data:{name:$('#nm').value}}});if(r.error)return toast(r.error.message);closeM();toast(login?'เข้าสู่ระบบแล้ว':'สมัครสำเร็จ')}
+function sell(){
+ if(!me){$('#main').innerHTML='<p>เข้าสู่ระบบก่อนลงขาย</p><button onclick=authM()>เข้าสู่ระบบ</button>';return}
+ $('#main').innerHTML=`<h2>ลงขายสินค้า</h2><input id=t placeholder="ชื่อสินค้า"><select id=c>${CATS.map(c=>`<option>${c}</option>`).join('')}</select><input id=pr type=number placeholder="ราคา (บาท)" oninput="fee()"><textarea id=ds rows=4 placeholder="รายละเอียดสินค้า"></textarea><label class=m>รูปตัวอย่าง <input id=im type=file accept="image/*"></label><input id=ct2 placeholder="ช่องทางติดต่อ (ลิงก์ไลน์ / เบอร์ / เฟซบุ๊ก)"><p id=fe class=pr></p><label class=m><input type=checkbox id=ok> ยอมรับ: ค่าลงไม่คืนเงินทุกกรณี แม้ไม่ผ่านการตรวจ และเว็บเป็นเพียงที่ฝากขาย ไม่รับผิดชอบการซื้อขาย</label><br><button onclick=submitL()>ลงขายและจ่ายค่าลง</button>`;fee()}
+function fee(){$('#fe').textContent='ค่าลง '+S.fee_percent+'% = ฿'+((+$('#pr').value||0)*S.fee_percent/100).toFixed(2)+' (หักจากยอดเงินในบัญชี)'}
+async function submitL(){
+ if(!$('#ok').checked)return toast('กรุณายอมรับเงื่อนไข');
+ if(!$('#t').value||!(+$('#pr').value>0)||!$('#ct2').value)return toast('กรอกชื่อ ราคา และช่องทางติดต่อ');
+ const f=$('#im').files[0];let url=null;
+ if(f){const p=me.id+'/'+Date.now()+'-'+f.name.replace(/[^\w.]/g,'');const u=await db.storage.from('images').upload(p,f);if(u.error)return toast(u.error.message);url=db.storage.from('images').getPublicUrl(p).data.publicUrl}
+ const{data,error}=await db.from('listings').insert({seller:me.id,title:$('#t').value,category:$('#c').value,price:+$('#pr').value,description:$('#ds').value,contact:$('#ct2').value,image_url:url}).select('id').single();
+ if(error)return toast(error.message);
+ pay(data.id)}
+async function pay(id){const{error}=await db.rpc('pay_listing',{lid:id});toast(error?error.message:'จ่ายแล้ว');await onMine()}
+async function onMine(){const{data}=await db.from('profiles').select('*').eq('id',me.id).single();prof=data;go('mine')}
+async function mine(){
+ if(!me){$('#main').innerHTML='<button onclick=authM()>เข้าสู่ระบบ</button>';return}
+ const L=(await db.from('listings').select(LC).eq('seller',me.id).order('id',{ascending:false})).data||[];
+ const T=(await db.from('topups').select('*').eq('user_id',me.id).order('id',{ascending:false}).limit(10)).data||[];
+ $('#main').innerHTML=`<h2>${esc(prof.name)} ${badge(prof.role)}</h2><p>ยอดเงิน <b class=pr>฿${prof.balance}</b> <button onclick=topM()>เติมเงิน</button></p><h3>สินค้าของฉัน</h3>`+L.map(l=>{const st=l.status=='live'&&new Date(l.expires_at)<Date.now()?'expired':l.status;return `<div class=row><span>${esc(l.title)} ฿${l.price}</span><span class=m>${ST[st]} ${esc(l.reject_reason||'')}</span>${st=='unpaid'?`<button onclick=pay(${l.id})>จ่ายค่าลง</button>`:''}${st=='expired'?`<button onclick=pay(${l.id})>ต่ออายุ</button>`:''}</div>`}).join('')+`<h3>ประวัติเติมเงิน</h3>`+T.map(t=>`<div class=row><span>฿${t.amount}</span><span class=m>${ST[t.status]||t.status}</span></div>`).join('');
+}
+function topM(){modal(`<h2>เติมเงิน</h2><input id=am type=number placeholder="ยอดเงิน (บาท)"><p>โอนเข้า: <b>${esc(S.bank_info)}</b></p><label class=m>แนบสลิป <input id=sl type=file accept="image/*"></label><button onclick=topUp()>แจ้งเติมเงิน</button><p class=m>แอดมินตรวจสอบภายใน 10-15 นาที</p>`)}
+async function topUp(){const f=$('#sl').files[0],a=+$('#am').value;if(!f||!(a>0))return toast('ใส่ยอดและแนบสลิป');const p=me.id+'/'+Date.now()+'.jpg';const u=await db.storage.from('slips').upload(p,f);if(u.error)return toast(u.error.message);const{error}=await db.from('topups').insert({user_id:me.id,amount:a,slip_url:p});toast(error?error.message:'ส่งแล้ว รอตรวจสอบ');closeM();mine()}
+async function admin(){
+ if(!isStaff()){$('#main').textContent='ไม่มีสิทธิ์เข้าหน้านี้';return}
+ const T=(await db.from('topups').select('*').eq('status','pending')).data||[];
+ const L=(await db.from('listings').select(LC).eq('status','pending')).data||[];
+ const R=(await db.from('reports').select('*').eq('status','open')).data||[];
+ let h='<h2>ตรวจสลิป</h2>';
+ for(const t of T){const u=(await db.storage.from('slips').createSignedUrl(t.slip_url,300)).data?.signedUrl;h+=`<div class=row><a href="${esc(u)}" target=_blank style="color:var(--a)">ดูสลิป</a><span>฿${t.amount}</span><button onclick="rpc('approve_topup',{tid:${t.id}})">อนุมัติ</button><button class=g onclick="rpc('reject_topup',{tid:${t.id}})">ปฏิเสธ</button></div>`}
+ h+='<h2>สินค้ารอตรวจ</h2>'+L.map(l=>`<div class=row><span>${esc(l.title)} ฿${l.price} (ค่าลง ฿${l.fee_paid})</span><button class=g onclick="detail(${l.id})">ดู</button><button onclick="rpc('approve_listing',{lid:${l.id}})">อนุมัติ</button><button class=g onclick="rej(${l.id})">ไม่ผ่าน</button></div>`).join('');
+ h+='<h2>รายงานปัญหา</h2>'+R.map(r=>`<div class=row><span>สินค้า #${r.listing_id}: ${esc(r.reason)}</span><button onclick="rpc('close_report',{rid:${r.id}})">ปิดเรื่อง</button></div>`).join('');
+ if(isCeo())h+=`<h2>CEO</h2><p>ค่าลง % <input id=fp value="${esc(S.fee_percent)}"> ค่าต่ออายุ % <input id=rp value="${esc(S.renew_percent)}"></p><p>บัญชีรับเงิน <input id=bk value="${esc(S.bank_info)}"></p><button onclick=saveS()>บันทึก</button><p>ตั้งยศ <input id=re placeholder="อีเมลสมาชิก"><select id=ro><option>member<option>verified<option>admin<option>ceo</select><button onclick=setRole()>ตั้งยศ</button></p>`;
+ $('#main').innerHTML=h}
+async function rpc(f,a){const{error}=await db.rpc(f,a);toast(error?error.message:'สำเร็จ');admin()}
+async function rej(id){const r=prompt('เหตุผลที่ไม่ผ่าน');if(r)rpc('reject_listing',{lid:id,reason:r})}
+async function saveS(){for(const[k,v]of[['fee_percent',$('#fp').value],['renew_percent',$('#rp').value],['bank_info',$('#bk').value]])await db.rpc('set_setting',{p_k:k,p_v:v});await loadS();toast('บันทึกแล้ว')}
+function setRole(){rpc('set_role',{p_email:$('#re').value,p_role:$('#ro').value})}
+</script></body></html>
