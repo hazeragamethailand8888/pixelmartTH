@@ -44,7 +44,8 @@ function toast(m){const t=$('#ts');t.textContent=m;t.style.display='block';setTi
 function modal(h){$('#md').innerHTML='<div class=box><span class=x onclick=closeM()>✕</span>'+h+'</div>';$('#md').style.display='flex'}
 function closeM(){$('#md').style.display='none'}
 async function loadS(){const{data}=await db.from('settings').select('*');(data||[]).forEach(r=>S[r.key]=r.value)}
-db.auth.onAuthStateChange(async(_,s)=>{me=s?.user||null;prof=null;await loadS();if(me)prof=(await db.from('profiles').select('*').eq('id',me.id).single()).data;render()});
+window.onerror=m=>document.body.insertAdjacentHTML('afterbegin','<p style="color:#f87171;padding:8px">เกิดข้อผิดพลาด: '+esc(m)+'</p>');
+db.auth.onAuthStateChange((_,s)=>{setTimeout(async()=>{me=s?.user||null;prof=null;try{await loadS();if(me)prof=(await db.from('profiles').select('*').eq('id',me.id).single()).data}catch(e){}render()},0)});
 function go(v){view=v;render()}
 async function render(){
  $('#nav').innerHTML=`<b class=logo onclick="go('home')">PIXEL<span>MART</span></b><div><a onclick="go('home')">ตลาด</a><a onclick="go('sell')">ลงขาย</a>`+(me?`<a onclick="go('mine')">บัญชี ฿${prof?.balance??0}</a>`+(isStaff()?`<a onclick="go('admin')">แอดมิน</a>`:'')+`<a onclick="db.auth.signOut()">ออก</a>`:`<a onclick="authM()">เข้าสู่ระบบ</a>`)+`</div>`;
