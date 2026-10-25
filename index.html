@@ -1,33 +1,61 @@
 <!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PIXELMART ตลาดของเกมไทย</title>
+<title>PIXELMART ตลาดของเกมไทย</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#070b16;--card:#0f1730;--line:#1f2d55;--a:#22d3ee;--b:#a78bfa;--tx:#e6ecff;--mut:#8b97bd;--ok:#4ade80}
+:root{--bg:#050810;--card:#0b1124;--line:#1b2850;--a:#27e3ff;--b:#8b5cf6;--tx:#e8eeff;--mut:#7f8cb5;--ok:#4ade80;--cut:14px}
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,"Noto Sans Thai",sans-serif;background:var(--bg);color:var(--tx);background-image:linear-gradient(rgba(34,211,238,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,.07) 1px,transparent 1px);background-size:32px 32px;background-attachment:fixed}
-nav{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#070b16ee;border-bottom:1px solid var(--line);position:sticky;top:0;backdrop-filter:blur(8px);z-index:5}
-nav a{margin-left:12px;color:var(--mut);cursor:pointer;font-size:14px}
-.logo{font-size:20px;letter-spacing:2px;cursor:pointer}.logo span{color:var(--a)}
-main{max-width:900px;margin:auto;padding:16px}
-input,select,textarea,button{font:inherit;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--tx);width:100%;margin:4px 0}
-button{width:auto;background:linear-gradient(90deg,var(--a),var(--b));color:#041022;border:0;font-weight:700;cursor:pointer;padding:10px 16px}
+body{margin:0;font-family:'IBM Plex Sans Thai',system-ui,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5}
+body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(600px 400px at 85% -5%,rgba(139,92,246,.28),transparent),radial-gradient(500px 400px at 0 25%,rgba(39,227,255,.13),transparent),linear-gradient(rgba(39,227,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(39,227,255,.05) 1px,transparent 1px);background-size:auto,auto,36px 36px,36px 36px}
+nav{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:10px 16px;background:rgba(5,8,16,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.logo{font:700 22px Kanit,sans-serif;letter-spacing:1px;cursor:pointer;white-space:nowrap}.logo span{color:var(--a)}
+.nl{margin-left:auto;display:flex;gap:4px;align-items:center;overflow-x:auto}
+.nl a{padding:7px 12px;border-radius:99px;color:var(--mut);cursor:pointer;font-size:14px;white-space:nowrap}.nl a:hover{color:var(--tx);background:var(--card)}
+.nl a.cta{background:linear-gradient(90deg,var(--a),var(--b));color:#021018;font-weight:600}
+main{max-width:980px;margin:auto;padding:16px}
+h2,h3{font-family:Kanit,sans-serif}
+input,select,textarea,button{font:inherit;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--tx);width:100%;margin:4px 0}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--a);border-color:transparent}
+button{width:auto;background:linear-gradient(90deg,var(--a),var(--b));color:#021018;border:0;font-weight:600;cursor:pointer;padding:11px 18px}
 button.g{background:none;color:var(--tx);border:1px solid var(--line)}
 input[type=checkbox]{width:auto}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer}
-.card img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#16203f;display:block}
-.p{padding:10px}.p h3{margin:4px 0;font-size:15px}
+.hero{padding:30px 0 10px}
+.hero h1{font:700 clamp(30px,7vw,54px)/1.12 Kanit,sans-serif;margin:0 0 10px;max-width:14em}
+.hero p{margin:0 0 16px;max-width:34em}
+.sr{padding:15px 16px;font-size:16px;border-color:var(--a);box-shadow:0 0 0 4px rgba(39,227,255,.08)}
+.trust{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.trust span{font-size:13px;color:var(--mut);border:1px solid var(--line);padding:5px 12px;border-radius:99px;background:rgba(11,17,36,.7)}
+.tiles{display:flex;gap:10px;overflow-x:auto;padding:14px 0 4px}
+.tile{flex:0 0 auto;min-width:78px;text-align:center;padding:10px 8px;border:1px solid var(--line);border-radius:14px;background:var(--card);cursor:pointer;font-size:13px;font-weight:500}
+.tile i{font-style:normal;font-size:24px;display:block}
+.tile.on{border-color:var(--a);background:linear-gradient(160deg,rgba(39,227,255,.18),rgba(139,92,246,.2))}
+.sh{font-size:20px;margin:22px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.card{padding:1px;cursor:pointer;background:linear-gradient(135deg,var(--a),var(--line) 40%,var(--b));clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)));transition:transform .15s}
+.card:hover{transform:translateY(-3px)}
+.ci{position:relative;background:var(--card);height:100%;clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)))}
+.ci img,.ph{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#121b3a}
+.ph{display:flex;align-items:center;justify-content:center;font-size:42px}
+.pt{position:absolute;right:0;top:10px;background:var(--a);color:#021018;font:700 15px Kanit,sans-serif;padding:3px 12px 3px 18px;clip-path:polygon(10px 0,100% 0,100% 100%,10px 100%,0 50%)}
+.p{padding:10px 12px 14px}.p h3{margin:4px 0 0;font-size:15px;font-weight:500}
 .pr{color:var(--a)}.m{color:var(--mut);font-size:13px}
-.chips{display:flex;gap:8px;overflow-x:auto;margin:8px 0}
-.chip{padding:6px 12px;border:1px solid var(--line);border-radius:99px;white-space:nowrap;cursor:pointer;font-size:13px}.chip.on{background:var(--a);color:#041022}
-.row{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin:6px 0}
-#md{display:none;position:fixed;inset:0;background:#000a;align-items:center;justify-content:center;padding:12px;z-index:9}
-.box{background:var(--card);border:1px solid var(--a);border-radius:14px;padding:16px;max-width:460px;width:100%;max-height:90vh;overflow:auto;position:relative}
+.empty{grid-column:1/-1;text-align:center;padding:36px 12px;border:1px dashed var(--line);border-radius:14px}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:6px 0}
+#md{display:none;position:fixed;inset:0;background:#000b;align-items:center;justify-content:center;padding:12px;z-index:9}
+.box{background:var(--card);border:1px solid var(--a);border-radius:16px;padding:18px;max-width:480px;width:100%;max-height:90vh;overflow:auto;position:relative}
 .x{position:absolute;right:14px;top:8px;cursor:pointer}
-.big{width:100%;border-radius:10px}.d{white-space:pre-wrap}
+.big{width:100%;border-radius:12px}.d{white-space:pre-wrap}
 .bd{font-size:12px;color:var(--ok);font-style:normal}
+footer{margin-top:40px;padding:24px 16px;border-top:1px solid var(--line);color:var(--mut);font-size:13px;text-align:center}
 #ts{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--a);padding:10px 16px;border-radius:99px;z-index:10}
+.pin{white-space:pre-wrap;font:inherit;font-size:13px;background:rgba(39,227,255,.08);border:1px solid var(--a);border-radius:12px;padding:10px 12px;margin:8px 0}
+.cm{display:flex;flex-direction:column;gap:6px;max-height:45vh;overflow-y:auto;padding:6px 0}
+.msg{max-width:82%;padding:8px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);align-self:flex-start;word-break:break-word}
+.msg.me{align-self:flex-end;background:rgba(39,227,255,.14)}
+.msg img{max-width:100%;border-radius:8px}
+.sys{align-self:center;color:var(--mut);font-size:12px;text-align:center}
+.sendr{display:flex;gap:6px;align-items:center}.sendr input{margin:0}
+.att{cursor:pointer;font-size:22px}
 </style></head><body>
-<nav id="nav"></nav><main id="main"></main><div id="md"></div><div id="ts"></div>
+<nav id="nav"></nav><main id="main"></main><footer>PIXELMART ตลาดฝากขายของเกมสำหรับคนไทย<br>เว็บเป็นเพียงที่ฝากขาย ไม่รับผิดชอบการซื้อขายระหว่างผู้ใช้ ค่าลงประกาศไม่คืนเงินทุกกรณี</footer><div id="md"></div><div id="ts"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 const SUPA_URL='https://ckwmkbuhylkglbbzcsfy.supabase.co',SUPA_KEY='sb_publishable_cky0ecswyluBHEkeYODPZQ_PvemV6jy';
@@ -45,38 +73,76 @@ function modal(h){$('#md').innerHTML='<div class=box><span class=x onclick=close
 function closeM(){$('#md').style.display='none'}
 async function loadS(){const{data}=await db.from('settings').select('*');(data||[]).forEach(r=>S[r.key]=r.value)}
 window.onerror=m=>document.body.insertAdjacentHTML('afterbegin','<p style="color:#f87171;padding:8px">เกิดข้อผิดพลาด: '+esc(m)+'</p>');
-db.auth.onAuthStateChange((_,s)=>{setTimeout(async()=>{me=s?.user||null;prof=null;try{await loadS();if(me)prof=(await db.from('profiles').select('*').eq('id',me.id).single()).data}catch(e){}render()},0)});
-function go(v){view=v;render()}
+db.auth.onAuthStateChange((ev,s)=>{if(ev=='PASSWORD_RECOVERY')setTimeout(newPwM,400);setTimeout(async()=>{me=s?.user||null;prof=null;try{await loadS();if(me)prof=(await db.from('profiles').select('*').eq('id',me.id).single()).data}catch(e){}render()},0)});
+let tm=null,cid=0,sig='';
+function go(v){view=v;clearInterval(tm);scrollTo(0,0);render()}
+async function forgot(){const e=$('#em').value;if(!e)return toast('ใส่อีเมลก่อน');const{error}=await db.auth.resetPasswordForEmail(e,{redirectTo:location.href.split('#')[0]});toast(error?error.message:'ส่งลิงก์ตั้งรหัสใหม่ไปที่อีเมลแล้ว')}
+function newPwM(){modal('<h2>ตั้งรหัสผ่านใหม่</h2><input id=np type=password placeholder="รหัสผ่านใหม่ 6 ตัวขึ้นไป"><button onclick=setPw()>บันทึก</button>')}
+async function setPw(){const{error}=await db.auth.updateUser({password:$('#np').value});if(!error)closeM();toast(error?error.message:'เปลี่ยนรหัสผ่านแล้ว')}
+const PIN='📌 ขั้นตอนซื้อขาย\n1 ตกลงรายละเอียดและราคาในห้องนี้\n2 กด "แจ้งแอดมิน" เมื่อตกลงกันแล้ว\n3 แอดมินรับเรื่อง\n4 ผู้ขายส่งเลขบัญชีรับเงินในห้อง\n5 ผู้ซื้อโอนตรงให้ผู้ขาย แล้วแนบสลิป\n6 ผู้ซื้อกด "โอนแล้ว" ผู้ขายเช็คเงินเข้าในแอปธนาคารของตัวเอง (ไม่ดูแค่สลิป) แล้วกด "ได้รับเงินแล้ว"\n7 แอดมินส่งสินค้าให้ผู้ซื้อ\nเว็บเป็นเพียงที่ฝากขาย ไม่รับผิดชอบการซื้อขาย';
+const stText=c=>c.closed?'ปิดแล้ว':c.delivered?'ส่งสินค้าแล้ว':c.seller_ok?'รอแอดมินส่งสินค้า':c.buyer_paid?'ผู้ซื้อโอนแล้ว':c.admin_ok?'แอดมินรับเรื่องแล้ว':c.called?'รอแอดมิน':'กำลังคุย';
+function openChat(id){cid=id;sig='';go('chat')}
+async function chats(){
+ if(!me){$('#main').innerHTML='<button onclick=authM()>เข้าสู่ระบบ</button>';return}
+ let r=db.from('chats').select('*').eq('closed',false).order('id',{ascending:false});
+ if(isStaff())r=r.eq('called',true);
+ const L=(await r).data||[];
+ $('#main').innerHTML='<h2>แชท</h2>'+(L.length?L.map(c=>`<div class=row onclick="openChat(${c.id})" style="cursor:pointer"><span>${esc(c.title)}</span><span class=m>${stText(c)}</span></div>`).join(''):'<p class=m>ยังไม่มีห้องแชท กดติดต่อผู้ขายจากหน้าสินค้า</p>')}
+async function chat(){if(!me)return go('home');await drawChat();tm=setInterval(drawChat,4000)}
+async function drawChat(){
+ const c=(await db.from('chats').select('*').eq('id',cid).single()).data;if(!c)return;
+ const M=(await db.from('messages').select('*').eq('chat_id',cid).order('id')).data||[];
+ const s2=[c.called,c.admin_ok,c.buyer_paid,c.seller_ok,c.delivered,c.closed,M.length,M.length?M[M.length-1].id:0].join();
+ if($('#cm')&&s2==sig)return;sig=s2;
+ const ids=[...new Set([c.buyer,c.seller,...M.map(m=>m.sender).filter(Boolean)])],nm={};
+ for(const u of (await db.from('seller_info').select('*').in('id',ids)).data||[])nm[u.id]=u.name;
+ if(!$('#cm'))$('#main').innerHTML=`<div id=ch></div><pre class=pin>${PIN}</pre><div id=ca></div><div id=cm class=cm></div><div class=sendr><input id=tx placeholder="พิมพ์ข้อความ" onkeydown="if(event.key=='Enter')send()"><label class=att>📎<input type=file id=fl hidden onchange=sendFile()></label><button onclick=send()>ส่ง</button></div>`;
+ const B=c.buyer==me.id,Sl=c.seller==me.id,st=isStaff(),op=!c.closed;
+ $('#ch').innerHTML=`<button class=g onclick="go('chats')">กลับ</button><h2>${esc(c.title)}</h2><p class=m>ผู้ซื้อ ${esc(nm[c.buyer])} ผู้ขาย ${esc(nm[c.seller])} สถานะ ${stText(c)}</p>`;
+ $('#ca').innerHTML=(op&&!c.called&&(B||Sl)?`<button onclick="act('call')">แจ้งแอดมิน</button> `:'')+(op&&c.called&&!c.admin_ok&&st?`<button onclick="act('ok')">รับเรื่อง</button> `:'')+(op&&B&&c.admin_ok&&!c.buyer_paid?`<button onclick="act('paid')">โอนแล้ว</button> `:'')+(op&&Sl&&c.buyer_paid&&!c.seller_ok?`<button onclick="act('received')">ได้รับเงินแล้ว</button> `:'')+(op&&st&&c.buyer_paid&&c.seller_ok&&!c.delivered?`<button onclick="act('deliver')">ส่งสินค้าให้ผู้ซื้อ</button> `:'')+((st||(B&&c.delivered))?`<button class=g onclick=delivery()>ข้อมูลสินค้าที่ส่งมอบ</button> `:'')+(op&&st?`<button class=g onclick="act('close')">ปิดห้อง</button>`:'');
+ let h='';
+ for(const m of M){
+  if(m.kind=='system'){h+=`<div class=sys>${esc(m.body)}</div>`;continue}
+  let b=esc(m.body);
+  if(m.kind=='file'){const u=(await db.storage.from('chatfiles').createSignedUrl(m.file_path,3600)).data?.signedUrl||'';b=/\.(png|jpe?g|gif|webp)$/i.test(m.file_path)?`<a href="${esc(u)}" target=_blank><img src="${esc(u)}" alt=""></a>`:`<a href="${esc(u)}" target=_blank style="color:var(--a)">📎 ${b}</a>`}
+  h+=`<div class="msg ${m.sender==me.id?'me':''}"><div class=m>${esc(nm[m.sender]||'')}</div>${b}</div>`}
+ $('#cm').innerHTML=h;$('#cm').scrollTop=1e9}
+async function act(a){const{error}=await db.rpc('chat_action',{cid,act:a});if(error)toast(error.message);sig='';drawChat()}
+async function send(){const t=$('#tx').value.trim();if(!t)return;$('#tx').value='';const{error}=await db.from('messages').insert({chat_id:cid,sender:me.id,body:t});if(error)toast(error.message);sig='';drawChat()}
+async function sendFile(){const f=$('#fl').files[0];if(!f)return;const p=cid+'/'+Date.now()+'-'+f.name.replace(/[^\w.]/g,'');const u=await db.storage.from('chatfiles').upload(p,f);if(u.error)return toast(u.error.message);await db.from('messages').insert({chat_id:cid,sender:me.id,kind:'file',body:f.name,file_path:p});sig='';drawChat()}
+async function delivery(){const{data,error}=await db.rpc('get_delivery',{cid});if(error)return toast(error.message);let u='';if(data.file)u=(await db.storage.from('deliver').createSignedUrl(data.file,600)).data?.signedUrl||'';modal(`<h2>ข้อมูลสินค้าที่ส่งมอบ</h2><p class=d>${esc(data.note||'-')}</p>${u?`<p><a href="${esc(u)}" target=_blank style="color:var(--a)">ดาวน์โหลดไฟล์สินค้า</a></p>`:''}`)}
 async function render(){
- $('#nav').innerHTML=`<b class=logo onclick="go('home')">PIXEL<span>MART</span></b><div><a onclick="go('home')">ตลาด</a><a onclick="go('sell')">ลงขาย</a>`+(me?`<a onclick="go('mine')">บัญชี ฿${prof?.balance??0}</a>`+(isStaff()?`<a onclick="go('admin')">แอดมิน</a>`:'')+`<a onclick="db.auth.signOut()">ออก</a>`:`<a onclick="authM()">เข้าสู่ระบบ</a>`)+`</div>`;
- await({home,sell,mine,admin}[view])();
+ $('#nav').innerHTML=`<b class=logo onclick="go('home')">PIXEL<span>MART</span></b><div class=nl><a onclick="go('home')">ตลาด</a>`+(me?`<a onclick="go('chats')">แชท</a><a onclick="go('mine')">บัญชี ฿${prof?.balance??0}</a>`+(isStaff()?`<a onclick="go('admin')">แอดมิน</a>`:'')+`<a onclick="db.auth.signOut()">ออก</a>`:`<a onclick="authM()">เข้าสู่ระบบ</a>`)+`<a class=cta onclick="go('sell')">+ ลงขาย</a></div>`;
+ await({home,sell,mine,admin,chats,chat}[view])();
 }
-const card=l=>`<div class=card onclick="detail(${l.id})"><img src="${esc(l.image_url)}" loading=lazy alt=""><div class=p><span class=m>${esc(l.category)}</span><h3>${esc(l.title)}</h3><b class=pr>฿${l.price}</b></div></div>`;
+const EM={'เกม':'🎮','โมเดล 3D':'🧊','2D':'🖼️','UI':'🧩','ไอคอน':'⭐','สคริปต์':'💻','เสียง':'🔊','เพลง':'🎵'};
+const card=l=>`<div class=card onclick="detail(${l.id})"><div class=ci>${l.image_url?`<img src="${esc(l.image_url)}" loading=lazy alt="">`:`<div class=ph>${EM[l.category]||'📦'}</div>`}<b class=pt>฿${Number(l.price).toLocaleString()}</b><div class=p><span class=m>${EM[l.category]||''} ${esc(l.category)}</span><h3>${esc(l.title)}</h3></div></div></div>`;
 async function home(){
  let r=db.from('listings').select(LC).eq('status','live').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false});
  if(cat)r=r.eq('category',cat);if(q)r=r.ilike('title','%'+q.replace(/[%,]/g,'')+'%');
  const d=(await r).data||[];
- $('#main').innerHTML=`<input placeholder="ค้นหาสินค้า" value="${esc(q)}" onchange="q=this.value;home()"><div class=chips>`+['',...CATS].map(c=>`<b class="chip ${c==cat?'on':''}" onclick="cat='${c}';home()">${c||'ทั้งหมด'}</b>`).join('')+`</div><div class=grid>`+(d.length?d.map(card).join(''):'<p class=m>ยังไม่มีสินค้าในหมวดนี้ กดลงขายเป็นคนแรก</p>')+`</div>`;
+ $('#main').innerHTML=`<section class=hero><h1>ตลาดของเกมสำหรับคนทำเกมไทย</h1><p class=m>โมเดล 3D, UI, ไอคอน, สคริปต์, เสียง และเพลง ลงขายง่าย คุยกับผู้ขายได้โดยตรง</p><input class=sr placeholder="ค้นหาสินค้า เช่น โมเดลรถ, UI เมนูเกม" value="${esc(q)}" onchange="q=this.value;home()"><div class=trust><span>ผู้ขายที่ยืนยันตัวตนมีป้ายรับรอง</span><span>แอดมินตรวจทุกชิ้นก่อนขึ้นขาย</span><span>รายงานปัญหาได้ทุกสินค้า</span></div></section><div class=tiles>`+['',...CATS].map(c=>`<b class="tile ${c==cat?'on':''}" onclick="cat='${c}';home()"><i>${EM[c]||'✨'}</i>${c||'ทั้งหมด'}</b>`).join('')+`</div><h2 class=sh>${cat||'สินค้าล่าสุด'} <small class=m>${d.length} ชิ้น</small></h2><div class=grid>`+(d.length?d.map(card).join(''):`<div class=empty><p>ยังไม่มีสินค้าในหมวดนี้</p><button onclick="go('sell')">ลงขายชิ้นแรก</button></div>`)+`</div>`;
 }
 async function detail(id){
  const{data:l}=await db.from('listings').select(LC).eq('id',id).single();if(!l)return;
  const s=(await db.from('seller_info').select('*').eq('id',l.seller).single()).data;
- modal(`<img class=big src="${esc(l.image_url)}" alt=""><h2>${esc(l.title)}</h2><p><b class=pr>฿${l.price}</b> <span class=m>${esc(l.category)}</span></p><p>ผู้ขาย ${esc(s?.name||'-')} ${badge(s?.role)}</p><p class=d>${esc(l.description)}</p><p id=ct></p><button onclick="contact(${l.id})">ติดต่อผู้ขาย</button> <button class=g onclick="report(${l.id})">รายงาน</button><p class=m>เว็บเป็นเพียงที่ฝากขาย ไม่รับผิดชอบการซื้อขายระหว่างผู้ใช้</p>`);
+ modal(`${l.image_url?`<img class=big src="${esc(l.image_url)}" alt="">`:""}<h2>${esc(l.title)}</h2><p><b class=pr>฿${l.price}</b> <span class=m>${esc(l.category)}</span></p><p>ผู้ขาย ${esc(s?.name||'-')} ${badge(s?.role)}</p><p class=d>${esc(l.description)}</p><p id=ct></p><button onclick="contact(${l.id})">ติดต่อผู้ขาย</button> <button class=g onclick="report(${l.id})">รายงาน</button><p class=m>เว็บเป็นเพียงที่ฝากขาย ไม่รับผิดชอบการซื้อขายระหว่างผู้ใช้</p>`);
 }
-async function contact(id){if(!me)return authM();const{data,error}=await db.rpc('get_contact',{lid:id});$('#ct').innerHTML=error?esc(error.message):'ช่องทางติดต่อ: '+(/^https?:\/\//.test(data)?`<a href="${esc(data)}" target=_blank rel=noopener style="color:var(--a)">${esc(data)}</a>`:'<b>'+esc(data)+'</b>')}
+async function contact(id){if(!me)return authM();const{data,error}=await db.rpc('open_chat',{lid:id});if(error)return toast(error.message);closeM();openChat(data)}
 async function report(id){if(!me)return authM();const r=prompt('เหตุผลที่รายงาน');if(!r)return;const{error}=await db.from('reports').insert({listing_id:id,reporter:me.id,reason:r});toast(error?error.message:'ส่งรายงานแล้ว')}
-function authM(){modal(`<h2>สมาชิก</h2><input id=nm placeholder="ชื่อที่แสดง (ตอนสมัคร)"><input id=em type=email placeholder="อีเมล"><input id=pw type=password placeholder="รหัสผ่าน อย่างน้อย 6 ตัว"><button onclick="auth(1)">เข้าสู่ระบบ</button> <button class=g onclick="auth(0)">สมัครสมาชิก</button>`)}
+function authM(){modal(`<h2>สมาชิก</h2><input id=nm placeholder="ชื่อที่แสดง (ตอนสมัคร)"><input id=em type=email placeholder="อีเมล"><input id=pw type=password placeholder="รหัสผ่าน อย่างน้อย 6 ตัว"><button onclick="auth(1)">เข้าสู่ระบบ</button> <button class=g onclick="auth(0)">สมัครสมาชิก</button><p><a onclick=forgot() class=m style="cursor:pointer">ลืมรหัสผ่าน</a></p>`)}
 async function auth(login){const e=$('#em').value,p=$('#pw').value;const r=login?await db.auth.signInWithPassword({email:e,password:p}):await db.auth.signUp({email:e,password:p,options:{data:{name:$('#nm').value}}});if(r.error)return toast(r.error.message);closeM();toast(login?'เข้าสู่ระบบแล้ว':'สมัครสำเร็จ')}
 function sell(){
  if(!me){$('#main').innerHTML='<p>เข้าสู่ระบบก่อนลงขาย</p><button onclick=authM()>เข้าสู่ระบบ</button>';return}
- $('#main').innerHTML=`<h2>ลงขายสินค้า</h2><input id=t placeholder="ชื่อสินค้า"><select id=c>${CATS.map(c=>`<option>${c}</option>`).join('')}</select><input id=pr type=number placeholder="ราคา (บาท)" oninput="fee()"><textarea id=ds rows=4 placeholder="รายละเอียดสินค้า"></textarea><label class=m>รูปตัวอย่าง <input id=im type=file accept="image/*"></label><input id=ct2 placeholder="ช่องทางติดต่อ (ลิงก์ไลน์ / เบอร์ / เฟซบุ๊ก)"><p id=fe class=pr></p><label class=m><input type=checkbox id=ok> ยอมรับ: ค่าลงไม่คืนเงินทุกกรณี แม้ไม่ผ่านการตรวจ และเว็บเป็นเพียงที่ฝากขาย ไม่รับผิดชอบการซื้อขาย</label><br><button onclick=submitL()>ลงขายและจ่ายค่าลง</button>`;fee()}
+ $('#main').innerHTML=`<h2>ลงขายสินค้า</h2><input id=t placeholder="ชื่อสินค้า"><select id=c>${CATS.map(c=>`<option>${c}</option>`).join('')}</select><input id=pr type=number placeholder="ราคา (บาท)" oninput="fee()"><textarea id=ds rows=4 placeholder="รายละเอียดสินค้า"></textarea><label class=m>รูปตัวอย่าง <input id=im type=file accept="image/*"></label><input id=ct2 placeholder="ช่องทางติดต่อสำรองของคุณ (แอดมินเห็นเท่านั้น)"><textarea id=dn rows=3 placeholder="ข้อมูลส่งมอบ เช่น ลิงก์ดาวน์โหลด รหัส วิธีใช้ (ผู้ซื้อเห็นหลังแอดมินส่งสินค้าเท่านั้น)"></textarea><label class=m>ไฟล์สินค้าที่จะส่งมอบ <input id=df type=file></label><p id=fe class=pr></p><label class=m><input type=checkbox id=ok> ยอมรับ: ค่าลงไม่คืนเงินทุกกรณี แม้ไม่ผ่านการตรวจ และเว็บเป็นเพียงที่ฝากขาย ไม่รับผิดชอบการซื้อขาย</label><br><button onclick=submitL()>ลงขายและจ่ายค่าลง</button>`;fee()}
 function fee(){$('#fe').textContent='ค่าลง '+S.fee_percent+'% = ฿'+((+$('#pr').value||0)*S.fee_percent/100).toFixed(2)+' (หักจากยอดเงินในบัญชี)'}
 async function submitL(){
  if(!$('#ok').checked)return toast('กรุณายอมรับเงื่อนไข');
- if(!$('#t').value||!(+$('#pr').value>0)||!$('#ct2').value)return toast('กรอกชื่อ ราคา และช่องทางติดต่อ');
+ if(!$('#t').value||!(+$('#pr').value>0)||!$('#ct2').value||!($('#dn').value||$('#df').files[0]))return toast('กรอกชื่อ ราคา ช่องทางติดต่อ และข้อมูลหรือไฟล์ส่งมอบ');
  const f=$('#im').files[0];let url=null;
  if(f){const p=me.id+'/'+Date.now()+'-'+f.name.replace(/[^\w.]/g,'');const u=await db.storage.from('images').upload(p,f);if(u.error)return toast(u.error.message);url=db.storage.from('images').getPublicUrl(p).data.publicUrl}
- const{data,error}=await db.from('listings').insert({seller:me.id,title:$('#t').value,category:$('#c').value,price:+$('#pr').value,description:$('#ds').value,contact:$('#ct2').value,image_url:url}).select('id').single();
+ let dfp=null;const g=$('#df').files[0];if(g){dfp=me.id+'/'+Date.now()+'-'+g.name.replace(/[^\w.]/g,'');const w=await db.storage.from('deliver').upload(dfp,g);if(w.error)return toast(w.error.message)}
+ const{data,error}=await db.from('listings').insert({seller:me.id,title:$('#t').value,category:$('#c').value,price:+$('#pr').value,description:$('#ds').value,contact:$('#ct2').value,image_url:url,delivery_note:$('#dn').value,delivery_file:dfp}).select('id').single();
  if(error)return toast(error.message);
  pay(data.id)}
 async function pay(id){const{error}=await db.rpc('pay_listing',{lid:id});toast(error?error.message:'จ่ายแล้ว');await onMine()}
