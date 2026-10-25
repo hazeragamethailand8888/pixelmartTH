@@ -73,7 +73,7 @@ function modal(h){$('#md').innerHTML='<div class=box><span class=x onclick=close
 function closeM(){$('#md').style.display='none'}
 async function loadS(){const{data}=await db.from('settings').select('*');(data||[]).forEach(r=>S[r.key]=r.value)}
 window.onerror=m=>document.body.insertAdjacentHTML('afterbegin','<p style="color:#f87171;padding:8px">เกิดข้อผิดพลาด: '+esc(m)+'</p>');
-db.auth.onAuthStateChange((ev,s)=>{if(ev=='PASSWORD_RECOVERY')setTimeout(newPwM,400);setTimeout(async()=>{me=s?.user||null;prof=null;try{await loadS();if(me)prof=(await db.from('profiles').select('*').eq('id',me.id).single()).data}catch(e){}render()},0)});
+db.auth.onAuthStateChange((ev,s)=>{if(ev=='PASSWORD_RECOVERY')setTimeout(newPwM,400);const u=s?.user||null;if(ev!='INITIAL_SESSION'&&ev!='PASSWORD_RECOVERY'&&(u?.id||null)===(me?.id||null)){me=u;return}setTimeout(async()=>{me=u;prof=null;try{await loadS();if(me)prof=(await db.from('profiles').select('*').eq('id',me.id).single()).data}catch(e){}render()},0)});
 let tm=null,cid=0,sig='';
 function go(v){view=v;clearInterval(tm);scrollTo(0,0);render()}
 async function forgot(){const e=$('#em').value;if(!e)return toast('ใส่อีเมลก่อน');const{error}=await db.auth.resetPasswordForEmail(e,{redirectTo:location.href.split('#')[0]});toast(error?error.message:'ส่งลิงก์ตั้งรหัสใหม่ไปที่อีเมลแล้ว')}
@@ -134,7 +134,9 @@ function authM(){modal(`<h2>สมาชิก</h2><input id=nm placeholder="ช
 async function auth(login){const e=$('#em').value,p=$('#pw').value;const r=login?await db.auth.signInWithPassword({email:e,password:p}):await db.auth.signUp({email:e,password:p,options:{data:{name:$('#nm').value}}});if(r.error)return toast(r.error.message);closeM();toast(login?'เข้าสู่ระบบแล้ว':'สมัครสำเร็จ')}
 function sell(){
  if(!me){$('#main').innerHTML='<p>เข้าสู่ระบบก่อนลงขาย</p><button onclick=authM()>เข้าสู่ระบบ</button>';return}
- $('#main').innerHTML=`<h2>ลงขายสินค้า</h2><input id=t placeholder="ชื่อสินค้า"><select id=c>${CATS.map(c=>`<option>${c}</option>`).join('')}</select><input id=pr type=number placeholder="ราคา (บาท)" oninput="fee()"><textarea id=ds rows=4 placeholder="รายละเอียดสินค้า"></textarea><label class=m>รูปตัวอย่าง <input id=im type=file accept="image/*"></label><input id=ct2 placeholder="ช่องทางติดต่อสำรองของคุณ (แอดมินเห็นเท่านั้น)"><textarea id=dn rows=3 placeholder="ข้อมูลส่งมอบ เช่น ลิงก์ดาวน์โหลด รหัส วิธีใช้ (ผู้ซื้อเห็นหลังแอดมินส่งสินค้าเท่านั้น)"></textarea><label class=m>ไฟล์สินค้าที่จะส่งมอบ <input id=df type=file></label><p id=fe class=pr></p><label class=m><input type=checkbox id=ok> ยอมรับ: ค่าลงไม่คืนเงินทุกกรณี แม้ไม่ผ่านการตรวจ และเว็บเป็นเพียงที่ฝากขาย ไม่รับผิดชอบการซื้อขาย</label><br><button onclick=submitL()>ลงขายและจ่ายค่าลง</button>`;fee()}
+ $('#main').innerHTML=`<h2>ลงขายสินค้า</h2><input id=t placeholder="ชื่อสินค้า"><select id=c>${CATS.map(c=>`<option>${c}</option>`).join('')}</select><input id=pr type=number placeholder="ราคา (บาท)" oninput="fee()"><textarea id=ds rows=4 placeholder="รายละเอียดสินค้า"></textarea><label class=m>รูปตัวอย่าง <input id=im type=file accept="image/*" onchange="$('#imn').textContent=this.files[0]?'เลือกแล้ว: '+this.files[0].name:''"></label><p id=imn class=pr></p><input id=ct2 placeholder="ช่องทางติดต่อสำรองของคุณ (แอดมินเห็นเท่านั้น)"><textarea id=dn rows=3 placeholder="ข้อมูลส่งมอบ เช่น ลิงก์ดาวน์โหลด รหัส วิธีใช้ (ผู้ซื้อเห็นหลังแอดมินส่งสินค้าเท่านั้น)"></textarea><label class=m>ไฟล์สินค้าที่จะส่งมอบ <input id=df type=file onchange="$('#dfn').textContent=this.files[0]?'เลือกแล้ว: '+this.files[0].name:''"></label><p id=dfn class=pr></p><p id=fe class=pr></p><label class=m><input type=checkbox id=ok> ยอมรับ: ค่าลงไม่คืนเงินทุกกรณี แม้ไม่ผ่านการตรวจ และเว็บเป็นเพียงที่ฝากขาย ไม่รับผิดชอบการซื้อขาย</label><br><button onclick=submitL()>ลงขายและจ่ายค่าลง</button>`;fee();draftBind()}
+const DF=['t','c','pr','ds','ct2','dn','ok'];
+function draftBind(){try{const d=JSON.parse(sessionStorage.getItem('draft')||'{}');DF.forEach(k=>{const e=$('#'+k);if(!e)return;if(k=='ok')e.checked=!!d[k];else if(d[k]!=null)e.value=d[k];['input','change'].forEach(ev=>e.addEventListener(ev,()=>{try{const x=JSON.parse(sessionStorage.getItem('draft')||'{}');x[k]=k=='ok'?e.checked:e.value;sessionStorage.setItem('draft',JSON.stringify(x))}catch(_){}}))});fee()}catch(_){}}
 function fee(){$('#fe').textContent='ค่าลง '+S.fee_percent+'% = ฿'+((+$('#pr').value||0)*S.fee_percent/100).toFixed(2)+' (หักจากยอดเงินในบัญชี)'}
 async function submitL(){
  if(!$('#ok').checked)return toast('กรุณายอมรับเงื่อนไข');
@@ -144,6 +146,7 @@ async function submitL(){
  let dfp=null;const g=$('#df').files[0];if(g){dfp=me.id+'/'+Date.now()+'-'+g.name.replace(/[^\w.]/g,'');const w=await db.storage.from('deliver').upload(dfp,g);if(w.error)return toast(w.error.message)}
  const{data,error}=await db.from('listings').insert({seller:me.id,title:$('#t').value,category:$('#c').value,price:+$('#pr').value,description:$('#ds').value,contact:$('#ct2').value,image_url:url,delivery_note:$('#dn').value,delivery_file:dfp}).select('id').single();
  if(error)return toast(error.message);
+ try{sessionStorage.removeItem('draft')}catch(_){}
  pay(data.id)}
 async function pay(id){const{error}=await db.rpc('pay_listing',{lid:id});toast(error?error.message:'จ่ายแล้ว');await onMine()}
 async function onMine(){const{data}=await db.from('profiles').select('*').eq('id',me.id).single();prof=data;go('mine')}
